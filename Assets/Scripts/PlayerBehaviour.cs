@@ -7,7 +7,11 @@ public class PlayerBehaviour : MonoBehaviour
     Rigidbody2D rb;
 
     public float speed;
-    public float jumpForce;
+    int numberOfJumps = 2;
+
+    [SerializeField ]private float jumpForce = 5.0f;
+    
+    bool isJumping;
 
     private GameController gcPlayer;
 
@@ -26,13 +30,24 @@ public class PlayerBehaviour : MonoBehaviour
         Vector2 movement = new Vector2(horizontal * speed, rb.velocity.y);
         rb.velocity = movement;
 
-        // Pulo
+        //Ativação do pulo
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if(isJumping == true && numberOfJumps > 0)
+            {
+                Jump();
+            }
         }
     }
 
+    //Pulo
+    void Jump()
+    {
+        numberOfJumps = numberOfJumps - 1;
+        rb.velocity = new Vector2 (0, jumpForce);
+    }
+
+    //Colisão com as moedas
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.tag == "Coin")
@@ -40,6 +55,16 @@ public class PlayerBehaviour : MonoBehaviour
             Destroy(col.gameObject);
             gcPlayer.coins++;
             gcPlayer.textScore.text = gcPlayer.coins.ToString();
+        }
+    }
+
+    //Verifica o Chão
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if(col.gameObject.tag == "Ground")
+        {
+            numberOfJumps = 2;
+            isJumping = true;
         }
     }
 }
