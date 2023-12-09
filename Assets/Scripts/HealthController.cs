@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class HealthController : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class HealthController : MonoBehaviour
         if (numLives <= 0)
         {
             Debug.Log("Game Over");
+            SceneManager.LoadScene("Victory");
         }
 
         else
